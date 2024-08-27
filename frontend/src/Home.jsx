@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom'
 function Home() {
   return (
     <div>
-      <Link to={`/polaroid`}>
-        <button>Polaroid</button>
-      </Link>
       <Link to={`/add-filter`}>
-        <button>Add Filter</button>
+        <button>Step 1: Add Filter</button>
+      </Link>
+      <Link to={`/polaroid`}>
+        <button>Step 2: Polaroid</button>
       </Link>
     </div>
   )

@@ -15,17 +15,28 @@ body {
   margin-left: 0;
   padding-left: 10px;
   padding-right: 10px;
-  border-top: 0.00001px solid lightgray;
-  border-bottom: 0.00001px solid lightgray;
+  border-top: 0.00001px solid rgb(235, 233, 233);
+  border-bottom: 0.00001px solid rgb(229, 225, 225);
 }
 
 .imageBracket {
+  /*
+  Thinkpad:
   width: 234px;
   height: 269px;
-  border-right: 0.00001px solid lightgray;
-  border-left: 0.00001px solid lightgray;
   padding-top: 26px;
   padding-bottom: 52px;
+  */
+
+  /* Macbook */
+  width: 259px;
+  height: 296.64px;
+  padding-top: 29.25px;
+  padding-bottom: 58.5px;
+  border-right: 0.00001px solid lightgray;
+  border-left: 0.00001px solid lightgray;
+  border-top: 0.00001px solid lightgray;
+  border-bottom: 0.00001px solid lightgray;
 }
 
 .imageCard {
@@ -33,8 +44,16 @@ body {
 }
 
 .imageCard img {
+  /*
+  Thinkpad
   width: 200px;
   height: 268px;
+  object-fit: cover;
+  */
+
+  /* Macbook */
+  width: 221.43px;
+  height: 296.64px;
   object-fit: cover;
 }
 

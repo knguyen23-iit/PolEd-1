@@ -1,0 +1,36 @@
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  margin-left: 20px;
+}
+
+/* RotateImage.css */
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Center the image vertically and horizontally */
+}
+
+.rotating-image {
+  width: 200px; /* Adjust the size as needed */
+  height: auto;
+  animation: rotate 5s linear infinite; /* Animation for rotation */
+}
+
+.rotating-image:hover {
+  animation-play-state: paused; /* Pauses animation on hover */
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg); /* Start at 0 degrees */
+  }
+  to {
+    transform: rotate(360deg); /* Rotate to 360 degrees */
+  }
+}

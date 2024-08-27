@@ -5,13 +5,14 @@ body {
 
 .image-container {
   display: grid ;
-  row-gap: 20px;
   /*
   Thinkpad
   grid-template-columns: 260px 260px 260px;
   */
   /* Macbook */
   grid-template-columns: 285px 285px 285px;
+
+  row-gap: 20px;
 
 }
 

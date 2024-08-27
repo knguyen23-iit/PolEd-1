@@ -290,7 +290,6 @@ function AddFilter() {
     <div>
       <div className='edit-box-filter'>
         <BackButton />
-        <button onClick={handleDownload}>DOWNLOAD ALL</button>
         <button onClick={handleSaveToServer} style={{ display: 'block' }}>SAVE ALL</button>
 
         <canvas ref={downloadCanvasRef} style={{ display: 'none' }}></canvas> {/* Non-display canvas */}

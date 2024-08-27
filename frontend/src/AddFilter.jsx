@@ -3,6 +3,7 @@ import './AddFilter.css';
 import { fabric } from 'fabric';
 import BackButton from '../BackButton';
 import axios from 'axios';
+import { useSnackbar } from 'notistack'
 
 // Dynamically import all images from the "public/images" folder
 const images = import.meta.glob('../public/unfiltered-images/*.{png,jpg,jpeg,svg}');
@@ -30,6 +31,9 @@ function AddFilter() {
   const brightnessDisplayRef = useRef(null);
   const saturationDisplayRef = useRef(null);
   const contrastDisplayRef = useRef(null);
+
+  //For notistack
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -273,6 +277,9 @@ function AddFilter() {
               });
           }, 'image/png'); // Specify the MIME type of the Blob
         });
+
+        enqueueSnackbar('Deleted Old Images', { variant: 'error' });
+        enqueueSnackbar('Images Saved Successfully', { variant: 'success' });
       })
       .catch(error => {
         console.error('Error clearing folder:', error);

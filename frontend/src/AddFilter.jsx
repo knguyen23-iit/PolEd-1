@@ -234,7 +234,7 @@ function AddFilter() {
 
   const handleSaveToServer = () => {
     // Clear the folder first
-    axios.get('http://localhost:5000/clear-folder')
+    axios.get('http://localhost:3000/clear-folder')
       .then(() => {
         const downloadCanvas = downloadCanvasRef.current;
         const ctx = downloadCanvas.getContext('2d');
@@ -264,7 +264,7 @@ function AddFilter() {
             formData.append('image', blob, `bunny-${index + 1}.png`); // Append the blob as a file
 
             // Use Axios to send the image to the server
-            axios.post('http://localhost:5000/upload', formData, {
+            axios.post('http://localhost:3000/upload', formData, {
               headers: {
                 'Content-Type': 'multipart/form-data'
               }

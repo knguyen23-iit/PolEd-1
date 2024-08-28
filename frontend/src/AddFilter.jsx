@@ -4,6 +4,8 @@ import { fabric } from 'fabric';
 import BackButton from '../BackButton';
 import axios from 'axios';
 import { useSnackbar } from 'notistack'
+import { Link } from 'react-router-dom';
+import { Button } from '@mui/material';
 
 // Dynamically import all images from the "public/images" folder
 const images = import.meta.glob('../public/unfiltered-images/*.{png,jpg,jpeg,svg}');
@@ -290,7 +292,14 @@ function AddFilter() {
     <div>
       <div className='edit-box-filter'>
         <BackButton />
+        <br />
         <button onClick={handleSaveToServer} style={{ display: 'block' }}>SAVE ALL</button>
+        <br />
+        <Link to={`/polaroid`}>
+          <button variant='contained'>Next step: Polaroid</button>
+        </Link>
+        <hr />
+
 
         <canvas ref={downloadCanvasRef} style={{ display: 'none' }}></canvas> {/* Non-display canvas */}
 
@@ -309,6 +318,7 @@ function AddFilter() {
         />
         <button onClick={resetVibrance}>Reset Vibrance</button>
 
+        <hr />
         {/* Brightness */}
         <div ref={brightnessDisplayRef}>Brightness: {Math.round(brightness * 100) / 100}</div>
         <button onClick={() => adjustValue(brightness, setBrightness, -1, 1, -0.01)}>− Brightness</button>
@@ -324,6 +334,7 @@ function AddFilter() {
         />
         <button onClick={resetBrightness}>Reset Brightness</button>
 
+        <hr />
         {/* Saturation */}
         <div ref={saturationDisplayRef}>Saturation: {Math.round(saturation * 100) / 100}</div>
         <button onClick={() => adjustValue(saturation, setSaturation, -1, 1, -0.01)}>− Saturation</button>
@@ -339,6 +350,7 @@ function AddFilter() {
         />
         <button onClick={resetSaturation}>Reset Saturation</button>
 
+        <hr />
         {/* Contrast */}
         <div ref={contrastDisplayRef}>Contrast: {Math.round(contrast * 100) / 100}</div>
         <button onClick={() => adjustValue(contrast, setContrast, -1, 1, -0.01)}>− Contrast</button>

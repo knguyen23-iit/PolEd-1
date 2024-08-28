@@ -1,9 +1,13 @@
 .edit-box-filter {
   background-color: lightblue;
   width: 210px;
-  height: 400px;
+  height: 500px;
   position: fixed;
   top: 100px;
   right: 20px;
   z-index: 100;
+}
+
+hr {
+  border-top: 2px solid red;
 }

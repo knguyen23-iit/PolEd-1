@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 
 // Dynamically import all images from the "public/images" folder
-const images = import.meta.glob('../public/unfiltered-images/*.{png,jpg,jpeg,svg}');
+const images = import.meta.glob('../public/unfiltered-images/*.{png,jpg,jpeg,svg, JPG}');
 
 // Convert the imported images into an array of objects with id and imageUrl
 const initData = Object.keys(images).map((path, index) => {

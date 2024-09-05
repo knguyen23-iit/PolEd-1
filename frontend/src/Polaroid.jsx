@@ -7,7 +7,7 @@ import BackButton from '../BackButton';
 
 
 // Dynamically import all images from the "public/images" folder
-const images = import.meta.glob('../public/filtered-images/*.{png,jpg,jpeg,svg}');
+const images = import.meta.glob('../public/filtered-images/*.{png,jpg,jpeg,svg, JPG}');
 
 // Convert the imported images into an array of objects with id and imageUrl
 const initData = Object.keys(images).map((path, index) => {

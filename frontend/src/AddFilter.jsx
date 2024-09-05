@@ -37,31 +37,77 @@ function AddFilter() {
   //For notistack
   const { enqueueSnackbar } = useSnackbar();
 
+  // useEffect(() => {
+  //   if (!canvasRef.current) return;
+
+  //   const canvasInstance = new fabric.Canvas(canvasRef.current);
+  //   setCanvas(canvasInstance);
+
+  //   const imageWidth = 450;
+  //   const imageHeight = 300;
+  //   const imagesPerRow = 2;
+  //   const canvasWidth = imageWidth * imagesPerRow;
+  //   const canvasHeight = Math.ceil(initData.length / imagesPerRow) * imageHeight;
+
+  //   canvasInstance.setWidth(canvasWidth);
+  //   canvasInstance.setHeight(canvasHeight);
+
+  //   initData.forEach((imageData, index) => {
+  //     fabric.Image.fromURL(imageData.imageUrl, (img) => {
+  //       img.scaleToWidth(imageWidth);
+  //       img.scaleToHeight(imageHeight);
+  //       img.set({
+  //         left: (index % imagesPerRow) * imageWidth,
+  //         top: Math.floor(index / imagesPerRow) * imageHeight,
+  //       });
+
+  //       // Add initial filters
+  //       img.filters.push(
+  //         new fabric.Image.filters.Vibrance({ vibrance }),
+  //         new fabric.Image.filters.Brightness({ brightness }),
+  //         new fabric.Image.filters.Saturation({ saturation }),
+  //         new fabric.Image.filters.Contrast({ contrast })
+  //       );
+  //       img.applyFilters();
+
+  //       canvasInstance.add(img);
+  //       canvasInstance.renderAll();
+  //     });
+  //   });
+
+  //   return () => {
+  //     canvasInstance.dispose();
+  //   };
+  // }, []);
+
   useEffect(() => {
     if (!canvasRef.current) return;
 
     const canvasInstance = new fabric.Canvas(canvasRef.current);
     setCanvas(canvasInstance);
 
-    const imageWidth = 450;
-    const imageHeight = 300;
-    const imagesPerRow = 2;
-    const canvasWidth = imageWidth * imagesPerRow;
-    const canvasHeight = Math.ceil(initData.length / imagesPerRow) * imageHeight;
-
-    canvasInstance.setWidth(canvasWidth);
-    canvasInstance.setHeight(canvasHeight);
+    let totalHeight = 0;
 
     initData.forEach((imageData, index) => {
       fabric.Image.fromURL(imageData.imageUrl, (img) => {
-        img.scaleToWidth(imageWidth);
-        img.scaleToHeight(imageHeight);
+        const imgWidth = img.width;
+        const imgHeight = img.height;
+
+        // Set canvas width to the width of the largest image
+        if (canvasInstance.width < imgWidth) {
+          canvasInstance.setWidth(imgWidth);
+        }
+
+        // Position each image one below the other
         img.set({
-          left: (index % imagesPerRow) * imageWidth,
-          top: Math.floor(index / imagesPerRow) * imageHeight,
+          left: 0,
+          top: totalHeight,
         });
 
-        // Add initial filters
+        // Increment totalHeight by the height of the current image
+        totalHeight += imgHeight;
+
+        // Apply initial filters (optional)
         img.filters.push(
           new fabric.Image.filters.Vibrance({ vibrance }),
           new fabric.Image.filters.Brightness({ brightness }),
@@ -71,6 +117,7 @@ function AddFilter() {
         img.applyFilters();
 
         canvasInstance.add(img);
+        canvasInstance.setHeight(totalHeight);
         canvasInstance.renderAll();
       });
     });
@@ -79,6 +126,7 @@ function AddFilter() {
       canvasInstance.dispose();
     };
   }, []);
+
 
   useEffect(() => {
     if (!canvas) return;
@@ -288,7 +336,7 @@ function AddFilter() {
       });
   };
 
-  const handleSaveToServer = () => {
+  const temp3 = () => {
     // Clear the folder first
     axios.get('http://localhost:3000/clear-folder')
       .then(() => {
@@ -341,6 +389,59 @@ function AddFilter() {
         console.error('Error clearing folder:', error);
       });
   };
+
+  const handleSaveToServer = () => {
+    // Clear the folder first
+    axios.get('http://localhost:3000/clear-folder')
+      .then(() => {
+        const downloadCanvas = downloadCanvasRef.current;
+        const ctx = downloadCanvas.getContext('2d');
+        const fabricCanvas = canvas;
+
+        if (!fabricCanvas) {
+          console.error('Fabric.js canvas instance is not available.');
+          return;
+        }
+
+        const imgObjects = fabricCanvas.getObjects('image');
+
+        imgObjects.forEach((imgObject, index) => {
+          const { width, height } = imgObject;
+
+          downloadCanvas.width = width;
+          downloadCanvas.height = height;
+
+          ctx.clearRect(0, 0, width, height);
+          ctx.drawImage(imgObject._element, 0, 0, width, height);
+
+          // Convert canvas to Blob
+          downloadCanvas.toBlob((blob) => {
+            const formData = new FormData();
+            formData.append('image', blob, `image-${index + 1}.jpg`); // Save as JPG
+
+            // Use Axios to send the image to the server
+            axios.post('http://localhost:3000/upload', formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            })
+              .then(response => {
+                console.log(`Image ${index + 1} saved successfully:`, response.data);
+              })
+              .catch(error => {
+                console.error(`Error saving image ${index + 1}:`, error);
+              });
+          }, 'image/jpeg', 1.0); // Use JPEG format and set quality to 1.0 (maximum quality)
+        });
+
+        enqueueSnackbar('Deleted Old Images', { variant: 'error' });
+        enqueueSnackbar('Images Saved Successfully', { variant: 'success' });
+      })
+      .catch(error => {
+        console.error('Error clearing folder:', error);
+      });
+  };
+
 
   return (
     <div>

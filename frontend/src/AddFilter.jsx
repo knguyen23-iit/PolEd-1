@@ -234,7 +234,7 @@ function AddFilter() {
     });
   };
 
-  const handleSaveToServer = () => {
+  const temp2 = () => {
     // Clear the folder first
     axios.get('http://localhost:3000/clear-folder')
       .then(() => {
@@ -278,6 +278,60 @@ function AddFilter() {
                 console.error(`Error saving image ${index + 1}:`, error);
               });
           }, 'image/png'); // Specify the MIME type of the Blob
+        });
+
+        enqueueSnackbar('Deleted Old Images', { variant: 'error' });
+        enqueueSnackbar('Images Saved Successfully', { variant: 'success' });
+      })
+      .catch(error => {
+        console.error('Error clearing folder:', error);
+      });
+  };
+
+  const handleSaveToServer = () => {
+    // Clear the folder first
+    axios.get('http://localhost:3000/clear-folder')
+      .then(() => {
+        const downloadCanvas = downloadCanvasRef.current;
+        const ctx = downloadCanvas.getContext('2d');
+        const fabricCanvas = canvas;
+
+        if (!fabricCanvas) {
+          console.error('Fabric.js canvas instance is not available.');
+          return;
+        }
+
+        const imgObjects = fabricCanvas.getObjects('image');
+
+        imgObjects.forEach((imgObject, index) => {
+          const { width, height, scaleX, scaleY } = imgObject;
+          const scaledWidth = width * scaleX;
+          const scaledHeight = height * scaleY;
+
+          downloadCanvas.width = scaledWidth;
+          downloadCanvas.height = scaledHeight;
+
+          ctx.clearRect(0, 0, scaledWidth, scaledHeight);
+          ctx.drawImage(imgObject._element, 0, 0, scaledWidth, scaledHeight);
+
+          // Convert canvas to Blob
+          downloadCanvas.toBlob((blob) => {
+            const formData = new FormData();
+            formData.append('image', blob, `bunny-${index + 1}.jpg`); // Save as JPG
+
+            // Use Axios to send the image to the server
+            axios.post('http://localhost:3000/upload', formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            })
+              .then(response => {
+                console.log(`Image ${index + 1} saved successfully:`, response.data);
+              })
+              .catch(error => {
+                console.error(`Error saving image ${index + 1}:`, error);
+              });
+          }, 'image/jpeg', 1.0); // Use JPEG format and set quality to 1.0 (maximum quality)
         });
 
         enqueueSnackbar('Deleted Old Images', { variant: 'error' });
